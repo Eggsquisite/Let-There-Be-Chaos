@@ -40,4 +40,8 @@ public class PlayerMovement : MonoBehaviour
         movementVect = new Vector3(h, v);
         movementVect = movementVect.normalized * moveSpeed * 100f * Time.deltaTime;
     }
+
+    public void SetMoveSpeed(int newValue) {
+        moveSpeed = newValue;
+    }
 }

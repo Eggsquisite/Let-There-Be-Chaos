@@ -8,8 +8,12 @@ public class CameraFollow : MonoBehaviour
     private Transform playerTarget;
     [SerializeField]
     private bool canFollow;
+    [SerializeField] [Range(0f, 1f)]
+    private float smoothSpeed = 0.125f;
     [SerializeField]
     private float speed;
+
+    [Header ("Clamp Values")]
     [SerializeField]
     private float min_X;
     [SerializeField]
@@ -19,6 +23,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private float max_Y;
 
+    private Vector3 velocity = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +42,7 @@ public class CameraFollow : MonoBehaviour
                                         Mathf.Clamp(playerTarget.position.y, min_Y, max_Y),
                                         transform.position.z);
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, speed * Time.fixedDeltaTime);
-            transform.position = smoothedPosition;
+            transform.position = Vector3.SmoothDamp(transform.position, smoothedPosition, ref velocity, smoothSpeed);
         }
     }
 }

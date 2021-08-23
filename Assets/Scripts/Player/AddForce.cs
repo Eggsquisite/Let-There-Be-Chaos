@@ -7,10 +7,8 @@ public class AddForce : MonoBehaviour
     [SerializeField]
     private float forceAdded;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public void UpdateForce(float addedValue) {
+        forceAdded += addedValue;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
