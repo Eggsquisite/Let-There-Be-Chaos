@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &166406661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,7 +339,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -382,8 +382,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTarget: {fileID: 1269522158}
-  speed: 5
   canFollow: 1
+  speed: 5
+  min_X: -5
+  max_X: 5
+  min_Y: -5
+  max_Y: 5
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -484,7 +488,7 @@ GameObject:
   - component: {fileID: 775467761}
   - component: {fileID: 775467762}
   m_Layer: 0
-  m_Name: pulse-export
+  m_Name: Pulse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -569,6 +573,7 @@ GameObject:
   - component: {fileID: 1269522159}
   - component: {fileID: 1269522161}
   - component: {fileID: 1269522160}
+  - component: {fileID: 1269522162}
   m_Layer: 0
   m_Name: MainHeart
   m_TagString: Untagged
@@ -616,7 +621,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1355480287
   m_SortingLayer: 1
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: 4606908045521496030, guid: ed11fa710fc86854c933abc75253547a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -642,7 +647,7 @@ Transform:
   - {fileID: 166406662}
   - {fileID: 775467761}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1269522159
 Rigidbody2D:
@@ -661,7 +666,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -695,6 +700,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.59375
+--- !u!114 &1269522162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269522156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e44cc4526a48494c90aa03f9655411b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heartSprite: {fileID: 775467762}
+  firstPulseMaxTime: 0
+  secondPulseMaxTime: 0
 --- !u!1 &1347157437
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,11 +855,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 516283494600122218, guid: ed11fa710fc86854c933abc75253547a, type: 3}
-  m_Color: {r: 0.5660378, g: 0.29102886, b: 0.29102886, a: 1}
+  m_SortingLayerID: -1355480287
+  m_SortingLayer: 1
+  m_SortingOrder: 5
+  m_Sprite: {fileID: -6196730701274677480, guid: 44080d0606818da458e5d8bb4fbcaa19, type: 3}
+  m_Color: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
