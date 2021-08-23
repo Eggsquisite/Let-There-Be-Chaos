@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AddForce : MonoBehaviour
 {
+    [SerializeField]
+    private float forceAdded;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,8 +18,8 @@ public class AddForce : MonoBehaviour
         if (collision.tag == "Chaos")
         {
             Debug.Log("Adding force to chaos");
-            Vector3 tmpDir = (transform.position - collision.transform.position).normalized;
-            collision.GetComponent<Rigidbody2D>().AddForce(tmpDir * 0.5f);
+            Vector3 tmpDir = (collision.transform.position - transform.position).normalized;
+            collision.GetComponent<Rigidbody2D>().AddForce(tmpDir * forceAdded);
 
         } else if (collision.tag == "Hearts")
         {
