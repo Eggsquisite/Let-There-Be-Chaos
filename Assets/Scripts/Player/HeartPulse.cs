@@ -7,6 +7,8 @@ public class HeartPulse : MonoBehaviour
     [SerializeField]
     private SpriteRenderer heartSprite;
     [SerializeField]
+    private Vector3 pulseSize;
+    [SerializeField]
     private float firstPulseMaxTime;
     [SerializeField]
     private float secondPulseMaxTime;
@@ -25,6 +27,11 @@ public class HeartPulse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Vector3 smoothedTransition = Vector3.Lerp(transform.localScale, pulseSize, 5f * Time.deltaTime);
+        transform.localScale = smoothedTransition;
+
+        if (transform.localScale == pulseSize) {
+            Debug.Log("Max sized reach");
+        }
     }
 }

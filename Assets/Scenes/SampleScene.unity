@@ -713,8 +713,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heartSprite: {fileID: 775467762}
-  firstPulseMaxTime: 0
-  secondPulseMaxTime: 0
+  pulseSize: {x: 3, y: 3, z: 0}
+  firstPulseMaxTime: 3
+  secondPulseMaxTime: 1
 --- !u!1 &1347157437
 GameObject:
   m_ObjectHideFlags: 0
