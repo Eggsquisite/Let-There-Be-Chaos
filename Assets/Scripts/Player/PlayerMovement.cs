@@ -22,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         PlayerInput();
-        Debug.Log(rb.velocity);
     }
 
     private void FixedUpdate()
