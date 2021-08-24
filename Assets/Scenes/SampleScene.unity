@@ -230,7 +230,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1269522158}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &205908115
 GameObject:
@@ -264,16 +264,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e44cc4526a48494c90aa03f9655411b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heartSprite: {fileID: 251054541}
-  pulseForce: {fileID: 251054538}
+  pulseGameobject: {fileID: 251054537}
   forceUpgrade: 0
-  pulseLight: {fileID: 1179112130}
-  minLightIntensity: 0.65
-  maxLightIntensity: 0.75
   firstPulseSize: {x: 3, y: 3, z: 0}
   pulseSpeed: 3.5
   pulseCooldown: 0.5
   canPulse: 1
+  heartLight: {fileID: 1179112130}
+  minLightIntensity: 0.65
+  maxLightIntensity: 0.75
 --- !u!58 &205908118
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -374,8 +373,8 @@ Transform:
   m_LocalPosition: {x: -13, y: 6.15, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
-  - {fileID: 1179112131}
   - {fileID: 251054540}
+  - {fileID: 1179112131}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -439,7 +438,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 1.0433}
   m_Children: []
   m_Father: {fileID: 205908121}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &251054541
 SpriteRenderer:
@@ -615,8 +614,8 @@ GameObject:
   - component: {fileID: 519420035}
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
-  - component: {fileID: 519420030}
   - component: {fileID: 519420034}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -817,7 +816,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 1.0433}
   m_Children: []
   m_Father: {fileID: 1269522158}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &775467762
 SpriteRenderer:
@@ -1007,7 +1006,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 205908121}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1269522156
 GameObject:
@@ -1094,8 +1093,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 166406662}
   - {fileID: 775467761}
+  - {fileID: 166406662}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1162,16 +1161,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e44cc4526a48494c90aa03f9655411b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heartSprite: {fileID: 775467762}
-  pulseForce: {fileID: 775467764}
-  forceUpgrade: 0
-  pulseLight: {fileID: 166406661}
-  minLightIntensity: 0.65
-  maxLightIntensity: 0.75
+  pulseGameobject: {fileID: 775467760}
+  forceUpgrade: 50
   firstPulseSize: {x: 4, y: 4, z: 0}
   pulseSpeed: 3.5
   pulseCooldown: 0.5
   canPulse: 1
+  heartLight: {fileID: 166406661}
+  minLightIntensity: 0.65
+  maxLightIntensity: 0.75
 --- !u!95 &1269522163
 Animator:
   serializedVersion: 3

@@ -4,24 +4,10 @@ using UnityEngine;
 
 public class HeartPulse : MonoBehaviour
 {
-    [SerializeField]
-    private SpriteRenderer heartSprite;
-    [SerializeField]
-    private AddForce pulseForce;
-    [SerializeField]
-    private float forceUpgrade;
-
-    [Header ("Light Variables")]
-    [SerializeField]
-    private UnityEngine.Experimental.Rendering.Universal.Light2D pulseLight;
-    [SerializeField]
-    private float minLightIntensity;
-    [SerializeField]
-    private float maxLightIntensity;
-
-    private float baseLightIntensity;
-
     [Header ("Pulse Variables")]
+    [SerializeField]
+    private GameObject pulseGameobject;
+
     [SerializeField]
     private Vector3 firstPulseSize;
     [SerializeField]
@@ -29,24 +15,45 @@ public class HeartPulse : MonoBehaviour
     [SerializeField]
     private float pulseCooldown;
     [SerializeField]
+    private float forceUpgrade;
+    [SerializeField]
     private bool canPulse;
+
+    private AddForce pulseForce;
+    private Collider2D pulseCollider;
+    private SpriteRenderer pulseSprite;
 
     private Vector3 basePulseSize;
     private Vector3 smoothedPulse;
     private Vector3 secondPulseSize;
-    private GameObject heartGameobject;
 
     private int pulseIndex;
+
+    [Header ("Light Variables")]
+    [SerializeField]
+    private UnityEngine.Experimental.Rendering.Universal.Light2D heartLight;
+    [SerializeField]
+    private float minLightIntensity;
+    [SerializeField]
+    private float maxLightIntensity;
+
+    private float baseLightIntensity;
+
     
     // Start is called before the first frame update
     void Start()
     {
-        if (heartSprite != null)
-            heartGameobject = heartSprite.gameObject;
+        if (pulseGameobject != null) {
+            pulseForce = pulseGameobject.GetComponent<AddForce>();
+            pulseCollider = pulseGameobject.GetComponent<Collider2D>();
+            pulseSprite = pulseGameobject.GetComponent<SpriteRenderer>();
+        }
 
-        baseLightIntensity = pulseLight.intensity;
+        if (heartLight != null)
+            baseLightIntensity = heartLight.intensity;
+
         secondPulseSize = new Vector3(firstPulseSize.x - 0.5f, firstPulseSize.y - 0.5f);
-        basePulseSize = new Vector3(heartGameobject.transform.localScale.x, heartGameobject.transform.localScale.y);
+        basePulseSize = new Vector3(pulseGameobject.transform.localScale.x, pulseGameobject.transform.localScale.y);
     }
 
     // Update is called once per frame
@@ -56,40 +63,42 @@ public class HeartPulse : MonoBehaviour
             switch (pulseIndex)
             {
                 case 1:
-                    smoothedPulse = Vector3.Lerp(heartGameobject.transform.localScale, firstPulseSize, pulseSpeed * Time.deltaTime);
-                    heartGameobject.transform.localScale = smoothedPulse;
+                    SetPulseCollider(true);
+                    smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, firstPulseSize, pulseSpeed * Time.deltaTime);
+                    pulseGameobject.transform.localScale = smoothedPulse;
 
-                    pulseLight.intensity = Mathf.Lerp(pulseLight.intensity, maxLightIntensity, pulseSpeed * Time.deltaTime);
-                    if (heartGameobject.transform.localScale.x >= (firstPulseSize.x - 0.1f))
+                    heartLight.intensity = Mathf.Lerp(heartLight.intensity, maxLightIntensity, pulseSpeed * Time.deltaTime);
+                    if (pulseGameobject.transform.localScale.x >= (firstPulseSize.x - 0.1f))
                         IncreasePulseIndex();
                     break;
                 case 2:
-                    smoothedPulse = Vector3.Lerp(heartGameobject.transform.localScale, secondPulseSize, pulseSpeed * Time.deltaTime);
-                    heartGameobject.transform.localScale = smoothedPulse;
+                    smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, secondPulseSize, pulseSpeed * Time.deltaTime);
+                    pulseGameobject.transform.localScale = smoothedPulse;
 
-                    if (heartGameobject.transform.localScale.x <= (secondPulseSize.x + 0.1f))
+                    if (pulseGameobject.transform.localScale.x <= (secondPulseSize.x + 0.1f))
                         IncreasePulseIndex();
                     break;
                 case 3:
-                    smoothedPulse = Vector3.Lerp(heartGameobject.transform.localScale, firstPulseSize, pulseSpeed * Time.deltaTime);
-                    heartGameobject.transform.localScale = smoothedPulse;
+                    smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, firstPulseSize, pulseSpeed * Time.deltaTime);
+                    pulseGameobject.transform.localScale = smoothedPulse;
 
-                    if (heartGameobject.transform.localScale.x >= (firstPulseSize.x - 0.1f))
+                    if (pulseGameobject.transform.localScale.x >= (firstPulseSize.x - 0.1f))
                         IncreasePulseIndex();
                     break;
                 case 4:
-                    smoothedPulse = Vector3.Lerp(heartGameobject.transform.localScale, basePulseSize, pulseSpeed * Time.deltaTime);
-                    heartGameobject.transform.localScale = smoothedPulse;
+                    smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, basePulseSize, pulseSpeed * Time.deltaTime);
+                    pulseGameobject.transform.localScale = smoothedPulse;
 
-                    pulseLight.intensity = Mathf.Lerp(pulseLight.intensity, baseLightIntensity, pulseSpeed * Time.deltaTime);
+                    heartLight.intensity = Mathf.Lerp(heartLight.intensity, baseLightIntensity, pulseSpeed * Time.deltaTime);
                     // set pulse back to original size
-                    if (heartGameobject.transform.localScale.x <= basePulseSize.x + 0.1f)
+                    if (pulseGameobject.transform.localScale.x <= basePulseSize.x + 0.1f)
                         IncreasePulseIndex();
                     break;
                 case 5:
                     if (canPulse) {
                         pulseIndex = 0;
-                        canPulse = false;
+                        SetCanPulse(0);
+                        SetPulseCollider(false);
                         StartCoroutine(BeginPulseCooldown());
                     }
                     break;
@@ -107,7 +116,7 @@ public class HeartPulse : MonoBehaviour
     IEnumerator BeginPulseCooldown() {
         yield return new WaitForSeconds(pulseCooldown);
 
-        canPulse = true;
+        SetCanPulse(1);
     }
 
     public void SetPulseSize(float newSize) {
@@ -116,10 +125,17 @@ public class HeartPulse : MonoBehaviour
     }
 
     private void SetPulseForce() {
-        pulseForce.UpdateForce(forceUpgrade);
+        if (pulseForce != null)
+            pulseForce.UpdateForce(forceUpgrade);
+    }
+
+    private void SetPulseCollider(bool flag) {
+        if (pulseCollider != null) 
+            pulseCollider.enabled = flag;
     }
 
     public void SetCanPulse(int flag) {
+        // Called during intro animation event
         if (flag == 0)
             canPulse = false;
         else if (flag == 1)
