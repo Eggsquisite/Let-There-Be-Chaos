@@ -58,7 +58,7 @@ public class ObjectSpawner : MonoBehaviour
             Instantiate(heartObjects[index], randPosition, Quaternion.identity, heartParent);
         } else
         {
-            Instantiate(chaosObjects[Random.Range(0, chaosObjects.Count - 1)], randPosition, Quaternion.identity, chaosParent);
+            Instantiate(chaosObjects[Random.Range(0, chaosObjects.Count)], randPosition, Quaternion.identity, chaosParent);
         }
     }
 

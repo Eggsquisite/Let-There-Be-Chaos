@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6913366683193882602}
   - component: {fileID: 6913366683193882603}
   - component: {fileID: 6913366683193882135}
+  - component: {fileID: -4577000528681590726}
   m_Layer: 9
   m_Name: Chaos (1)
   m_TagString: Chaos
@@ -151,3 +152,16 @@ MonoBehaviour:
   m_ShapePathHash: 291711869
   m_Mesh: {fileID: 0}
   m_InstanceId: 25248
+--- !u!114 &-4577000528681590726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6913366683193882604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc32964c36317864d8067d7c7e86926e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  growthTier: 1

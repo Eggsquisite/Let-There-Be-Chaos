@@ -955,11 +955,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3107550392486465052, guid: d3a3612da1baa054dab12764b645b355, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.3
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 3107550392486465052, guid: d3a3612da1baa054dab12764b645b355, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6
+      value: 3.63
       objectReference: {fileID: 0}
     - target: {fileID: 3107550392486465052, guid: d3a3612da1baa054dab12764b645b355, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1270,6 +1270,66 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &887310130
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 887310133}
+  - component: {fileID: 887310132}
+  - component: {fileID: 887310131}
+  m_Layer: 0
+  m_Name: ChaosDestroyer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!58 &887310131
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887310130}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 5
+--- !u!114 &887310132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887310130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ccb935040f4e4543bee3677dfc024a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &887310133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887310130}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &926588075
 GameObject:
   m_ObjectHideFlags: 0
@@ -1502,8 +1562,8 @@ MonoBehaviour:
   chaosParent: {fileID: 1814063692}
   numberOfChaosObjectsToSpawn: 250
   chaosObjects:
-  - {fileID: 1537554872969785284, guid: bb58295d849b2bf4f9bf1563c71deef8, type: 3}
   - {fileID: 6913366683193882604, guid: b8d3bb4e336b5324b942e68bd4f7f98e, type: 3}
+  - {fileID: 1537554872969785284, guid: bb58295d849b2bf4f9bf1563c71deef8, type: 3}
   heartParent: {fileID: 926588076}
   heartObjects:
   - {fileID: 3107550392486465051, guid: d3a3612da1baa054dab12764b645b355, type: 3}
