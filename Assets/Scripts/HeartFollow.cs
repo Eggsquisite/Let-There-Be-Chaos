@@ -37,6 +37,16 @@ public class HeartFollow : MonoBehaviour
     private float baseTextDelay;
     private bool textBubblesReady;
 
+    private Coroutine textRoutine;
+
+    [Header("Growth Variables")]
+    [SerializeField]
+    private float minGrowthValue;
+    [SerializeField]
+    private float maxGrowthValue;
+
+    private float baseGrowthValue;
+
     [Header("Light Variables")]
     [SerializeField]
     private UnityEngine.Experimental.Rendering.Universal.Light2D heartLight;
@@ -61,6 +71,7 @@ public class HeartFollow : MonoBehaviour
 
         SetPickupReady(true);
         RandomizeTextDelay();
+        RandomizeGrowthValue();
 
         baseColor = sp.color;
         baseLightIntensity = heartLight.intensity;
@@ -128,7 +139,7 @@ public class HeartFollow : MonoBehaviour
 
     private IEnumerator ReturnToBase() {
         yield return new WaitForSeconds(returnToBaseDelay);
-        SetPickupReady(false);
+        SetPickupReady(true);
         SetReturnToBaseValues(true);
     }
 
@@ -136,16 +147,21 @@ public class HeartFollow : MonoBehaviour
     private IEnumerator SpawnText() { 
         while (textBubblesReady)
         {
-            yield return new WaitForSeconds(baseTextDelay);
+            yield return new WaitForSeconds(baseTextDelay + 3f);
 
             Instantiate(GameManager.instance.GetLoveBlurb(), textTransform.position, Quaternion.identity, transform);
-            playerObject.GetComponent<HeartGrowth>().IncreaseGrowth();
+            playerObject.GetComponent<HeartGrowth>().IncreaseGrowth(baseGrowthValue);
             RandomizeTextDelay();
+            RandomizeGrowthValue();
         }
     }
 
     private void RandomizeTextDelay() {
         baseTextDelay = Random.Range(minTextDelay, maxTextDelay);
+    }
+
+    private void RandomizeGrowthValue() {
+        baseGrowthValue = Random.Range(minGrowthValue, maxGrowthValue);
     }
 
     // Having Setters/Getters helps me visualize and organize ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +191,13 @@ public class HeartFollow : MonoBehaviour
 
     private void SetTextBubblesReady(bool flag) {
         textBubblesReady = flag;
-        if (textBubblesReady)
-            StartCoroutine(SpawnText());
+        if (textBubblesReady) {
+            if (textRoutine != null)
+                StopCoroutine(textRoutine);
+            textRoutine = StartCoroutine(SpawnText());
+        } else {
+            if (textRoutine != null)
+                StopCoroutine(textRoutine);
+        }
     }
 }

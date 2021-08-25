@@ -161,8 +161,10 @@ MonoBehaviour:
   transitionSpeed: 2.5
   returnToBaseDelay: 5
   textTransform: {fileID: 640944168}
-  minTextDelay: 0
-  maxTextDelay: 0
+  minTextDelay: 10
+  maxTextDelay: 15
+  minGrowthValue: 0
+  maxGrowthValue: 0
   heartLight: {fileID: 964543017}
   followLightIntensity: 0.25
 --- !u!58 &28841135
@@ -268,7 +270,7 @@ Transform:
   - {fileID: 964543018}
   - {fileID: 640944168}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &32553311
 GameObject:
@@ -424,6 +426,8 @@ MonoBehaviour:
   textTransform: {fileID: 1540714369}
   minTextDelay: 3
   maxTextDelay: 5
+  minGrowthValue: 0
+  maxGrowthValue: 0
   heartLight: {fileID: 600209554}
   followLightIntensity: 0.25
 --- !u!58 &143531347
@@ -529,7 +533,7 @@ Transform:
   - {fileID: 600209555}
   - {fileID: 1540714369}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &175599552
 GameObject:
@@ -549,7 +553,7 @@ GameObject:
   - component: {fileID: 175599561}
   - component: {fileID: 175599560}
   m_Layer: 6
-  m_Name: MainHeart
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -713,7 +717,7 @@ Transform:
   - {fileID: 269959767}
   - {fileID: 758263457}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &175599560
 MonoBehaviour:
@@ -739,6 +743,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5976de1e0a0344438bdadefe08a3bee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growthSpeed: 2
+  minGrowthValue: 0.5
+  maxGrowthValue: 10
 --- !u!43 &255360738
 Mesh:
   m_ObjectHideFlags: 0
@@ -1046,7 +1053,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &338347061
 MonoBehaviour:
@@ -2239,12 +2246,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1449840454}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.51, y: 5.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1814063692}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1449840457
 Rigidbody2D:
@@ -2400,6 +2407,38 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 50, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1814063691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1814063692}
+  m_Layer: 0
+  m_Name: Chaos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1814063692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1814063691}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1449840456}
+  - {fileID: 1968786687}
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1968786683
 GameObject:
   m_ObjectHideFlags: 0
@@ -2516,12 +2555,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968786683}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 7.07, y: -6.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1814063692}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1968786688
 MonoBehaviour:
@@ -2597,5 +2636,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

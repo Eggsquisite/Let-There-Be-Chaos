@@ -158,4 +158,11 @@ public class HeartPulse : MonoBehaviour
         else if (flag == 1)
             canPulse = true;
     }
+
+    /// <summary>
+    /// WHEN GROWTH REACHES A CERTAIN VALUE, INCREASE RESPECTIVE VALUES
+    /// </summary>
+    public void UpgradeHeart() { 
+        
+    }
 }
