@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class ObjectPickup : MonoBehaviour
 {
+    private HeartGrowth hg;
     private List<HeartFollow> heartFollow = new List<HeartFollow>();
+
+    private void Start()
+    {
+        if (hg == null) hg = GetComponent<HeartGrowth>();
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Hearts" && collision.gameObject.GetComponent<HeartFollow>().GetPickupReady())
         {
             var tmp = collision.gameObject.GetComponent<HeartFollow>();
-            tmp.SetPlayerObject(this.gameObject);
-
-            if (heartFollow.Count == 0) {
-                tmp.FollowPlayer(transform);
-            }
-            else if (heartFollow.Count > 0) { 
-                tmp.FollowPlayer(heartFollow[heartFollow.Count - 1].transform);
-            }
-
+            tmp.OnPickup(transform);
+            IncreaseGrowth(tmp.GetGrowthTier());
             heartFollow.Add(tmp);
 
             // CODE FOR CHANGING MATERIAL COLOR INTENSITY
@@ -30,21 +29,17 @@ public class ObjectPickup : MonoBehaviour
         } 
         else if (collision.gameObject.tag == "Chaos")
         {
-            DetachFromPlayer();
-            Destroy(collision.gameObject);
+            var tmp = collision.gameObject.GetComponent<Chaos>();
+            DecreaseGrowth(tmp.GetGrowthTier());
+            Destroy(tmp.gameObject);
             // play a destruction sound
         }
     }
 
-    public void DetachFromPlayer() {
-        if (heartFollow.Count > 0) {
-            Debug.Log(heartFollow.Count);
-            heartFollow[heartFollow.Count - 1].DetachFromPlayer();
-            heartFollow.RemoveAt(heartFollow.Count - 1);
-        }
-        else
-        {
-            // shrink heart pulse and/or size
-        }
+    private void IncreaseGrowth(int growthTier) {
+        hg.IncreaseGrowth(growthTier);
+    }
+    public void DecreaseGrowth(int growthTier) {
+        hg.DecreaseGrowth(growthTier);
     }
 }

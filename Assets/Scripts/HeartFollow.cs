@@ -12,40 +12,33 @@ public class HeartFollow : MonoBehaviour
     [SerializeField]
     private float moveSpeed;
     [SerializeField]
-    private float minDetachSpeed;
-    [SerializeField]
-    private float maxDetachSpeed;
-    [SerializeField]
     private float transitionSpeed;
-    [SerializeField]
-    private float returnToBaseDelay;
 
     private bool pickupReady;
     private bool followPlayer;
     private bool returnToBaseValues;
 
-    private float baseDetachSpeed;
-
     [Header("Text Variables")]
     [SerializeField]
     private Transform textTransform;
-    [SerializeField]
-    private float minTextDelay;
-    [SerializeField]
-    private float maxTextDelay;
+    /*    [SerializeField]
+        private float minTextDelay;
+        [SerializeField]
+        private float maxTextDelay;*/
 
-    private float baseTextDelay;
-    private bool textBubblesReady;
+    //private float baseTextDelay;
+    //private bool textBubblesReady;
 
-    private Coroutine textRoutine;
+    //private Coroutine textRoutine;
 
     [Header("Growth Variables")]
-    [SerializeField]
-    private float minGrowthValue;
-    [SerializeField]
-    private float maxGrowthValue;
+    [SerializeField] [Range (1, 5)]
+    private int growthTier;
 
-    private float baseGrowthValue;
+    [Header("Respawn Variables")]
+    [SerializeField]
+    private float respawnDelay;
+
 
     [Header("Light Variables")]
     [SerializeField]
@@ -70,13 +63,10 @@ public class HeartFollow : MonoBehaviour
         if (sp == null) sp = GetComponent<SpriteRenderer>();
 
         SetPickupReady(true);
-        RandomizeTextDelay();
-        RandomizeGrowthValue();
 
         baseColor = sp.color;
         baseLightIntensity = heartLight.intensity;
-        baseDetachSpeed = Random.Range(minDetachSpeed, maxDetachSpeed);
-        followColor = new Color(sp.color.r, sp.color.g, sp.color.b, 0.5f);
+        followColor = new Color(sp.color.r, sp.color.g, sp.color.b, 0f);
     }
 
     private void Update()
@@ -91,6 +81,10 @@ public class HeartFollow : MonoBehaviour
             {
                 lerpedColor = Color.Lerp(sp.color, followColor, transitionSpeed * Time.deltaTime);
                 sp.color = lerpedColor;
+            } else if (sp.color == followColor && followPlayer)
+            {
+                SetFollowPlayer(false);
+                StartCoroutine(BeginHeartRespawn());
             }
 
             // slowly reduce the light of the hearts light
@@ -119,54 +113,37 @@ public class HeartFollow : MonoBehaviour
             rb.MovePosition(rb.position + direction * moveSpeed * Time.fixedDeltaTime);
     }
 
-    public void DetachFromPlayer() {
-        rb.velocity *= baseDetachSpeed;
-
-        SetFollowPlayer(false);
-        SetColliderEnabled(true);
-        SetTextBubblesReady(false);
-        StartCoroutine(ReturnToBase());
-    }
-
-    public void FollowPlayer(Transform target) {
+    public void OnPickup(Transform target) {
         followTarget = target;
 
+        SpawnText();
         SetPickupReady(false);
         SetFollowPlayer(true);
         SetColliderEnabled(false);
-        SetTextBubblesReady(true);
+    }
+    private void SpawnText() {
+        Instantiate(GameManager.instance.GetLoveBlurb(), textTransform.position, Quaternion.identity, transform);
     }
 
-    private IEnumerator ReturnToBase() {
-        yield return new WaitForSeconds(returnToBaseDelay);
+    private IEnumerator BeginHeartRespawn() {
+        yield return new WaitForSeconds(respawnDelay);
+
+        ObjectSpawner.instance.TeleportObject(transform);
+        ReturnToBase();
+    }
+
+    private void ReturnToBase() {
         SetPickupReady(true);
         SetReturnToBaseValues(true);
-    }
-
-    // Instantiate a random love blurb at a random frequency
-    private IEnumerator SpawnText() { 
-        while (textBubblesReady)
-        {
-            yield return new WaitForSeconds(baseTextDelay + 3f);
-
-            Instantiate(GameManager.instance.GetLoveBlurb(), textTransform.position, Quaternion.identity, transform);
-            playerObject.GetComponent<HeartGrowth>().IncreaseGrowth(baseGrowthValue);
-            RandomizeTextDelay();
-            RandomizeGrowthValue();
-        }
-    }
-
-    private void RandomizeTextDelay() {
-        baseTextDelay = Random.Range(minTextDelay, maxTextDelay);
-    }
-
-    private void RandomizeGrowthValue() {
-        baseGrowthValue = Random.Range(minGrowthValue, maxGrowthValue);
     }
 
     // Having Setters/Getters helps me visualize and organize ////////////////////////////////////////////////////////////////////////////////////////////////
     public bool GetPickupReady() {
         return pickupReady;
+    }
+
+    public int GetGrowthTier() {
+        return growthTier;
     }
 
     public void SetPlayerObject(GameObject player) {
@@ -187,17 +164,5 @@ public class HeartFollow : MonoBehaviour
 
     private void SetColliderEnabled(bool flag) {
         coll.enabled = flag;
-    }
-
-    private void SetTextBubblesReady(bool flag) {
-        textBubblesReady = flag;
-        if (textBubblesReady) {
-            if (textRoutine != null)
-                StopCoroutine(textRoutine);
-            textRoutine = StartCoroutine(SpawnText());
-        } else {
-            if (textRoutine != null)
-                StopCoroutine(textRoutine);
-        }
     }
 }

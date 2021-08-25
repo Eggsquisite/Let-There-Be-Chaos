@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Chaos : MonoBehaviour
 {
+    [SerializeField]
+    private int growthTier;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +17,10 @@ public class Chaos : MonoBehaviour
     void Update()
     {
         
+    }
+
+    // GETTERS/SETTERS ////////////////////////////////////////////////////////////////////////
+    public int GetGrowthTier() {
+        return growthTier;
     }
 }

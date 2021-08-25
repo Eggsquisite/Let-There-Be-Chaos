@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour
 {
+    public static ObjectSpawner instance;
+
     [Header("Chaos variables")]
     [SerializeField]
     private Transform chaosParent;
@@ -26,6 +28,11 @@ public class ObjectSpawner : MonoBehaviour
 
     private Vector3 randPosition;
 
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +60,11 @@ public class ObjectSpawner : MonoBehaviour
         {
             Instantiate(chaosObjects[Random.Range(0, chaosObjects.Count - 1)], randPosition, Quaternion.identity, chaosParent);
         }
+    }
 
+    public void TeleportObject(Transform objectTransform) {
+        randPosition = new Vector3(Random.Range(-objectXSpread, objectXSpread), Random.Range(-objectYSpread, objectYSpread));
+
+        objectTransform.position = randPosition;
     }
 }

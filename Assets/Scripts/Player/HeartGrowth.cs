@@ -6,12 +6,20 @@ public class HeartGrowth : MonoBehaviour
 {
     private HeartPulse hp;
 
+    [Header("Growth Variables")]
     [SerializeField]
     private float growthSpeed;
     [SerializeField]
-    private float minGrowthValue;
+    private float growthTierOne;
     [SerializeField]
-    private float maxGrowthValue;
+    private float growthTierTwo;
+    [SerializeField]
+    private float growthTierThree;
+    [SerializeField]
+    private float growthTierFour;
+    [SerializeField]
+    private float growthTierFive;
+
 
     private float baseGrowth;
     private float growthUpdate;
@@ -28,23 +36,64 @@ public class HeartGrowth : MonoBehaviour
     void Update()
     {
         if (baseGrowth != growthUpdate) {
-            Debug.Log("Growing");
             transform.localScale = new Vector2(baseGrowth, baseGrowth);
             baseGrowth = Mathf.Lerp(baseGrowth, growthUpdate, growthSpeed * Time.deltaTime);
         }
     }
 
-    public void IncreaseGrowth(float newValue) {
-        if (growthUpdate + newValue <= maxGrowthValue)
+    public void IncreaseGrowth(int growthTier) {
+        switch (growthTier) {
+            case 1:
+                growthUpdate += growthTierOne;
+                break;
+            case 2:
+                growthUpdate += growthTierTwo;
+                break;
+            case 3:
+                growthUpdate += growthTierThree;
+                break;
+            case 4:
+                growthUpdate += growthTierFour;
+                break;
+            case 5:
+                growthUpdate += growthTierFive;
+                break;
+
+            default:
+                break;
+        }
+
+/*        if (growthUpdate + newValue <= maxGrowthValue)
             growthUpdate += newValue;
         else if (growthUpdate + newValue > maxGrowthValue)
-            growthUpdate = maxGrowthValue;
+            growthUpdate = maxGrowthValue;*/
     }
 
-    public void DecreaseGrowth(float newValue) {
-        if (growthUpdate - newValue >= minGrowthValue)
-            growthUpdate -= newValue;
-        else if (growthUpdate - newValue < minGrowthValue)
-            growthUpdate = minGrowthValue;
+    public void DecreaseGrowth(int growthTier) {
+        switch (growthTier) {
+            case 1:
+                growthUpdate -= growthTierOne;
+                break;
+            case 2:
+                growthUpdate -= growthTierTwo;
+                break;
+            case 3:
+                growthUpdate -= growthTierThree;
+                break;
+            case 4:
+                growthUpdate -= growthTierFour;
+                break;
+            case 5:
+                growthUpdate -= growthTierFive;
+                break;
+
+            default:
+                break;
+        }
+
+        /*        if (growthUpdate - newValue >= minGrowthValue)
+                    growthUpdate -= newValue;
+                else if (growthUpdate - newValue < minGrowthValue)
+                    growthUpdate = minGrowthValue;*/
     }
 }

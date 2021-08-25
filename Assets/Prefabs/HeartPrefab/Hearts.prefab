@@ -138,17 +138,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
-  minDetachSpeed: 5
-  maxDetachSpeed: 8
   transitionSpeed: 2.5
-  returnToBaseDelay: 5
   textTransform: {fileID: 3107550393305103562}
-  minTextDelay: 3
-  maxTextDelay: 5
-  minGrowthValue: 0.05
-  maxGrowthValue: 0.1
+  growthTier: 1
+  respawnDelay: 1
   heartLight: {fileID: 3107550393169636313}
-  followLightIntensity: 0.25
+  followLightIntensity: 0
 --- !u!1 &3107550393169636314
 GameObject:
   m_ObjectHideFlags: 0
