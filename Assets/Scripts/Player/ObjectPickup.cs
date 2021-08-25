@@ -8,10 +8,10 @@ public class ObjectPickup : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Hearts")
+        if (collision.gameObject.tag == "Hearts" && collision.gameObject.GetComponent<HeartFollow>().GetPickupReady())
         {
-            Debug.Log("Pickup heart: " + collision.gameObject.name);
             var tmp = collision.gameObject.GetComponent<HeartFollow>();
+            tmp.SetPlayerObject(this.gameObject);
 
             if (heartFollow.Count == 0) {
                 tmp.FollowPlayer(transform);
@@ -22,10 +22,13 @@ public class ObjectPickup : MonoBehaviour
 
             heartFollow.Add(tmp);
 
+            // CODE FOR CHANGING MATERIAL COLOR INTENSITY
             //tmpMaterial.SetVector("_Color", Color.white * colorIntensity);
+
             //factor = Mathf.Pow(2, intensity);
             //var color = new Color(tmpSprite.color.r * factor, tmpSprite.color.g * factor, tmpSprite.color.b * factor);
-        } else if (collision.gameObject.tag == "Chaos")
+        } 
+        else if (collision.gameObject.tag == "Chaos")
         {
             DetachFromPlayer();
             Destroy(collision.gameObject);

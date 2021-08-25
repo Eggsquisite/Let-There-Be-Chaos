@@ -8,6 +8,7 @@ public class HeartFollow : MonoBehaviour
     private Collider2D coll;
     private SpriteRenderer sp;
 
+    [Header("Follow Variables")]
     [SerializeField]
     private float moveSpeed;
     [SerializeField]
@@ -15,12 +16,26 @@ public class HeartFollow : MonoBehaviour
     [SerializeField]
     private float maxDetachSpeed;
     [SerializeField]
-    private float colorSpeed;
+    private float transitionSpeed;
     [SerializeField]
-    private float baseDelay;
+    private float returnToBaseDelay;
 
-    private bool returnToBase;
+    private bool pickupReady;
+    private bool followPlayer;
+    private bool returnToBaseValues;
+
     private float baseDetachSpeed;
+
+    [Header("Text Variables")]
+    [SerializeField]
+    private Transform textTransform;
+    [SerializeField]
+    private float minTextDelay;
+    [SerializeField]
+    private float maxTextDelay;
+
+    private float baseTextDelay;
+    private bool textBubblesReady;
 
     [Header("Light Variables")]
     [SerializeField]
@@ -32,11 +47,11 @@ public class HeartFollow : MonoBehaviour
     private Color followColor;
     private Color lerpedColor;
     private Vector2 direction;
-    private Transform playerTarget;
+    private Transform followTarget;
+    private GameObject playerObject;
 
     private float baseLightIntensity;
 
-    private bool followPlayer;
 
     private void Start()
     {
@@ -44,10 +59,13 @@ public class HeartFollow : MonoBehaviour
         if (coll == null) coll = GetComponent<Collider2D>();
         if (sp == null) sp = GetComponent<SpriteRenderer>();
 
+        SetPickupReady(true);
+        RandomizeTextDelay();
+
         baseColor = sp.color;
-        followColor = new Color(sp.color.r, sp.color.g, sp.color.b, 0.5f);
         baseLightIntensity = heartLight.intensity;
         baseDetachSpeed = Random.Range(minDetachSpeed, maxDetachSpeed);
+        followColor = new Color(sp.color.r, sp.color.g, sp.color.b, 0.5f);
     }
 
     private void Update()
@@ -55,32 +73,32 @@ public class HeartFollow : MonoBehaviour
         if (followPlayer)
         {
             // Calculate Direction to follow player
-            direction = playerTarget.GetComponent<Rigidbody2D>().position - rb.position;
+            direction = followTarget.GetComponent<Rigidbody2D>().position - rb.position;
 
             // slowly make the heart fully transparent
             if (sp.color != followColor)
             {
-                lerpedColor = Color.Lerp(sp.color, followColor, colorSpeed * Time.deltaTime);
+                lerpedColor = Color.Lerp(sp.color, followColor, transitionSpeed * Time.deltaTime);
                 sp.color = lerpedColor;
             }
 
             // slowly reduce the light of the hearts light
             if (heartLight.intensity > followLightIntensity)
-                heartLight.intensity = Mathf.Lerp(heartLight.intensity, followLightIntensity, colorSpeed * Time.deltaTime);
+                heartLight.intensity = Mathf.Lerp(heartLight.intensity, followLightIntensity, transitionSpeed * Time.deltaTime);
         }
-        else if (!followPlayer && returnToBase)
+        else if (!followPlayer && returnToBaseValues)
         {
             // slowly return the heart to full opacity, and restore collider when that happens
             if (sp.color != baseColor)
             {
-                lerpedColor = Color.Lerp(sp.color, baseColor, colorSpeed / 2 * Time.deltaTime);
+                lerpedColor = Color.Lerp(sp.color, baseColor, transitionSpeed / 2 * Time.deltaTime);
                 sp.color = lerpedColor;
             }
             else
-                returnToBase = false;
+                SetReturnToBaseValues(false);
 
             if (heartLight.intensity < baseLightIntensity)
-                heartLight.intensity = Mathf.Lerp(heartLight.intensity, baseLightIntensity, colorSpeed * Time.deltaTime);
+                heartLight.intensity = Mathf.Lerp(heartLight.intensity, baseLightIntensity, transitionSpeed * Time.deltaTime);
         }
     }
 
@@ -91,21 +109,73 @@ public class HeartFollow : MonoBehaviour
     }
 
     public void DetachFromPlayer() {
-        followPlayer = false;
         rb.velocity *= baseDetachSpeed;
+
+        SetFollowPlayer(false);
+        SetColliderEnabled(true);
+        SetTextBubblesReady(false);
         StartCoroutine(ReturnToBase());
     }
 
     public void FollowPlayer(Transform target) {
-        followPlayer = true;
-        playerTarget = target;
-        coll.enabled = false;
+        followTarget = target;
+
+        SetPickupReady(false);
+        SetFollowPlayer(true);
+        SetColliderEnabled(false);
+        SetTextBubblesReady(true);
     }
 
     private IEnumerator ReturnToBase() {
-        yield return new WaitForSeconds(0.1f);
-        coll.enabled = true;
-        yield return new WaitForSeconds(baseDelay);
-        returnToBase = true;
+        yield return new WaitForSeconds(returnToBaseDelay);
+        SetPickupReady(false);
+        SetReturnToBaseValues(true);
+    }
+
+    // Instantiate a random love blurb at a random frequency
+    private IEnumerator SpawnText() { 
+        while (textBubblesReady)
+        {
+            yield return new WaitForSeconds(baseTextDelay);
+
+            Instantiate(GameManager.instance.GetLoveBlurb(), textTransform.position, Quaternion.identity, transform);
+            playerObject.GetComponent<HeartGrowth>().IncreaseGrowth();
+            RandomizeTextDelay();
+        }
+    }
+
+    private void RandomizeTextDelay() {
+        baseTextDelay = Random.Range(minTextDelay, maxTextDelay);
+    }
+
+    // Having Setters/Getters helps me visualize and organize ////////////////////////////////////////////////////////////////////////////////////////////////
+    public bool GetPickupReady() {
+        return pickupReady;
+    }
+
+    public void SetPlayerObject(GameObject player) {
+        playerObject = player;
+    }
+
+    private void SetReturnToBaseValues(bool flag) {
+        returnToBaseValues = flag;
+    }
+
+    private void SetPickupReady(bool flag) {
+        pickupReady = flag;
+    }
+
+    private void SetFollowPlayer(bool flag) {
+        followPlayer = flag;
+    }
+
+    private void SetColliderEnabled(bool flag) {
+        coll.enabled = flag;
+    }
+
+    private void SetTextBubblesReady(bool flag) {
+        textBubblesReady = flag;
+        if (textBubblesReady)
+            StartCoroutine(SpawnText());
     }
 }
