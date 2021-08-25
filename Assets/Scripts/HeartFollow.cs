@@ -43,16 +43,16 @@ public class HeartFollow : MonoBehaviour
     [Header("Light Variables")]
     [SerializeField]
     private UnityEngine.Experimental.Rendering.Universal.Light2D heartLight;
-    [SerializeField] [Range(0f, 1f)]
-    private float followLightIntensity;
+    [SerializeField]
+    private float alphaTransitionDelay;
 
     private Color baseColor;
     private Color followColor;
     private Color lerpedColor;
     private Vector2 direction;
     private Transform followTarget;
-    private GameObject playerObject;
 
+    private bool alphaTransition;
     private float baseLightIntensity;
 
 
@@ -71,28 +71,12 @@ public class HeartFollow : MonoBehaviour
 
     private void Update()
     {
-        if (followPlayer)
-        {
+        if (followPlayer) {
             // Calculate Direction to follow player
             direction = followTarget.GetComponent<Rigidbody2D>().position - rb.position;
-
-            // slowly make the heart fully transparent
-            if (sp.color != followColor)
-            {
-                lerpedColor = Color.Lerp(sp.color, followColor, transitionSpeed * Time.deltaTime);
-                sp.color = lerpedColor;
-            } else if (sp.color == followColor && followPlayer)
-            {
-                SetFollowPlayer(false);
-                StartCoroutine(BeginHeartRespawn());
-            }
-
-            // slowly reduce the light of the hearts light
-            if (heartLight.intensity > followLightIntensity)
-                heartLight.intensity = Mathf.Lerp(heartLight.intensity, followLightIntensity, transitionSpeed * Time.deltaTime);
+            FadeAway();
         }
-        else if (!followPlayer && returnToBaseValues)
-        {
+        else if (!followPlayer && returnToBaseValues) {
             // slowly return the heart to full opacity, and restore collider when that happens
             if (sp.color != baseColor)
             {
@@ -120,7 +104,15 @@ public class HeartFollow : MonoBehaviour
         SetPickupReady(false);
         SetFollowPlayer(true);
         SetColliderEnabled(false);
+        StartCoroutine(AlphaTransition());
     }
+
+    private IEnumerator AlphaTransition() {
+        yield return new WaitForSeconds(alphaTransitionDelay);
+
+        SetAlphaTransition(true);
+    }
+
     private void SpawnText() {
         Instantiate(GameManager.instance.GetLoveBlurb(), textTransform.position, Quaternion.identity, transform);
     }
@@ -137,6 +129,25 @@ public class HeartFollow : MonoBehaviour
         SetReturnToBaseValues(true);
     }
 
+    private void FadeAway() {
+        // slowly make the heart fully transparent
+        if (sp.color != followColor && alphaTransition)
+        {
+            lerpedColor = Color.Lerp(sp.color, followColor, transitionSpeed * Time.deltaTime);
+            sp.color = lerpedColor;
+        }
+        else if (sp.color == followColor && alphaTransition)
+        {
+            SetFollowPlayer(false);
+            SetAlphaTransition(false);
+            StartCoroutine(BeginHeartRespawn());
+        }
+
+        // slowly reduce the intensity of the hearts light
+        if (heartLight.intensity > 0f)
+            heartLight.intensity = Mathf.Lerp(heartLight.intensity, 0f, transitionSpeed * Time.deltaTime);
+    }
+
     // Having Setters/Getters helps me visualize and organize ////////////////////////////////////////////////////////////////////////////////////////////////
     public bool GetPickupReady() {
         return pickupReady;
@@ -146,8 +157,8 @@ public class HeartFollow : MonoBehaviour
         return growthTier;
     }
 
-    public void SetPlayerObject(GameObject player) {
-        playerObject = player;
+    private void SetAlphaTransition(bool flag) {
+        alphaTransition = flag;
     }
 
     private void SetReturnToBaseValues(bool flag) {

@@ -143,7 +143,7 @@ MonoBehaviour:
   growthTier: 1
   respawnDelay: 1
   heartLight: {fileID: 3107550393169636313}
-  followLightIntensity: 0
+  alphaTransitionDelay: 3
 --- !u!1 &3107550393169636314
 GameObject:
   m_ObjectHideFlags: 0
