@@ -9,6 +9,8 @@ public class HeartPulse : MonoBehaviour
     private GameObject pulseGameobject;
 
     [SerializeField]
+    private Vector3 introPulseSize;
+    [SerializeField]
     private Vector3 firstPulseSize;
     [SerializeField]
     private float pulseSpeed;
@@ -18,6 +20,8 @@ public class HeartPulse : MonoBehaviour
     private float forceUpgrade;
     [SerializeField]
     private bool canPulse;
+
+    private bool introPulse;
 
     private AddForce pulseForce;
     private Collider2D pulseCollider;
@@ -33,7 +37,7 @@ public class HeartPulse : MonoBehaviour
     [SerializeField]
     private UnityEngine.Experimental.Rendering.Universal.Light2D heartLight;
     [SerializeField]
-    private float minLightIntensity;
+    private float introLightIntensity;
     [SerializeField]
     private float maxLightIntensity;
 
@@ -59,7 +63,16 @@ public class HeartPulse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canPulse) {
+        if (canPulse && introPulse) {
+            SetPulseCollider(true);
+            smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, introPulseSize, pulseSpeed * Time.deltaTime);
+            pulseGameobject.transform.localScale = smoothedPulse;
+
+            heartLight.intensity = Mathf.Lerp(heartLight.intensity, introLightIntensity, pulseSpeed * Time.deltaTime);
+            if (pulseGameobject.transform.localScale.x >= (introPulseSize.x - 0.1f))
+                introPulse = false;
+        }
+        else if (canPulse && !introPulse) {
             switch (pulseIndex)
             {
                 case 1:
@@ -107,6 +120,10 @@ public class HeartPulse : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void IntroPulse() {
+        introPulse = true;
     }
 
     private void IncreasePulseIndex() {

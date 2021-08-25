@@ -44,8 +44,8 @@ public class HeartFollow : MonoBehaviour
         if (coll == null) coll = GetComponent<Collider2D>();
         if (sp == null) sp = GetComponent<SpriteRenderer>();
 
-        baseColor = new Color(1f, 1f, 1f, 1f);
-        followColor = new Color(1f, 1f, 1f, 0.5f);
+        baseColor = sp.color;
+        followColor = new Color(sp.color.r, sp.color.g, sp.color.b, 0.5f);
         baseLightIntensity = heartLight.intensity;
         baseDetachSpeed = Random.Range(minDetachSpeed, maxDetachSpeed);
     }
@@ -93,6 +93,7 @@ public class HeartFollow : MonoBehaviour
     public void DetachFromPlayer() {
         followPlayer = false;
         rb.velocity *= baseDetachSpeed;
+        StartCoroutine(ReturnToBase());
     }
 
     public void FollowPlayer(Transform target) {
@@ -102,8 +103,9 @@ public class HeartFollow : MonoBehaviour
     }
 
     private IEnumerator ReturnToBase() {
+        yield return new WaitForSeconds(0.1f);
+        coll.enabled = true;
         yield return new WaitForSeconds(baseDelay);
         returnToBase = true;
-        coll.enabled = true;
     }
 }

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeartPickup : MonoBehaviour
+public class ObjectPickup : MonoBehaviour
 {
-    public List<HeartFollow> heartFollow = new List<HeartFollow>();
+    private List<HeartFollow> heartFollow = new List<HeartFollow>();
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
