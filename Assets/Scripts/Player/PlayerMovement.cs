@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Called during intro animation event to prevent player moevement
-    private void SetMoveSpeed(int newValue) {
+    public void SetMoveSpeed(int newValue) {
         moveSpeed = newValue;
     }
 

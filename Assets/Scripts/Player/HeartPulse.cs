@@ -31,6 +31,7 @@ public class HeartPulse : MonoBehaviour
     private Vector3 smoothedPulse;
     private Vector3 secondPulseSize;
 
+    private bool isDead;
     private int pulseIndex;
 
     [Header ("Light Variables")]
@@ -63,7 +64,13 @@ public class HeartPulse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canPulse && introPulse) {
+        if (isDead) { 
+            smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, Vector2.zero, 0.75f * Time.deltaTime);
+            pulseGameobject.transform.localScale = smoothedPulse;
+
+            heartLight.intensity = Mathf.Lerp(heartLight.intensity, 0f, 0.5f * Time.deltaTime);
+        } 
+        else if (canPulse && introPulse) {
             SetPulseCollider(true);
             smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, introPulseSize, pulseSpeed * Time.deltaTime);
             pulseGameobject.transform.localScale = smoothedPulse;
@@ -161,6 +168,10 @@ public class HeartPulse : MonoBehaviour
             canPulse = false;
         else if (flag == 1)
             canPulse = true;
+    }
+
+    public void SetIsDead(bool flag) {
+        isDead = flag;
     }
 
     /// <summary>

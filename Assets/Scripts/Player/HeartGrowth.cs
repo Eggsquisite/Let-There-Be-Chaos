@@ -13,7 +13,8 @@ public class HeartGrowth : MonoBehaviour
     [SerializeField]
     private float transitionSpeed;
 
-    private bool firstDarken;
+    private bool isDead;
+    private int darkenIndex;
 
     private Color baseColor;
     private Color transitionColor;
@@ -83,8 +84,12 @@ public class HeartGrowth : MonoBehaviour
 
         if (baseColor != transitionColor) {
             sp.color = baseColor;
-            baseColor = Color.Lerp(baseColor, transitionColor, transitionSpeed * Time.deltaTime);
-        }
+            
+            if (!isDead)
+                baseColor = Color.Lerp(baseColor, transitionColor, transitionSpeed * Time.deltaTime);
+            else 
+                baseColor = Color.Lerp(baseColor, transitionColor, 0.5f * Time.deltaTime);
+        } 
 
         CalculateThreshold();
     }
@@ -139,14 +144,29 @@ public class HeartGrowth : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Takes 5 hits of chaos at smallest growth for heart to break
+    /// </summary>
     public void DarkenHeart() {
-        if (!firstDarken) { 
+        if (darkenIndex <= 0) { 
             transitionColor = new Color(transitionColor.r - 0.8f, transitionColor.g - 0.8f, transitionColor.b - 0.8f);
-            firstDarken = true;
-        } else
-        {
+            darkenIndex = 1;
+        } 
+        else if (darkenIndex > 0 && darkenIndex < 4) {
             transitionColor = new Color(transitionColor.r - 0.05f, transitionColor.g - 0.05f, transitionColor.b - 0.05f);
+            darkenIndex++;
         }
+        else if (darkenIndex >= 4) {
+            transitionColor = new Color(transitionColor.r - 0.05f, transitionColor.g - 0.05f, transitionColor.b - 0.05f, 0f);
+            PlayerDead();
+        }
+    }
+
+    private void PlayerDead() {
+        isDead = true;
+        pm.SetMoveSpeed(0);
+        hp.SetIsDead(true);
+        Debug.Log("Player dead");
     }
 
     public void IncreaseGrowth(int growthTier) {
