@@ -76,9 +76,11 @@ public class HeartFollow : MonoBehaviour
                 lerpedColor = Color.Lerp(sp.color, baseColor, transitionSpeed / 2 * Time.deltaTime);
                 sp.color = lerpedColor;
             }
-            else {
+            else if (sp.color == baseColor && returnToBaseValues) {
+                Debug.Log("Renabling collider for : " + name);
                 SetColliderEnabled(true);
                 SetReturnToBaseValues(false);
+                //SetReturnToBaseValues(false);
             }
 
             if (heartLight.intensity < baseLightIntensity)
@@ -107,7 +109,7 @@ public class HeartFollow : MonoBehaviour
             } else
             {
                 SetPickupReady(false);
-                SetColliderEnabled(false);
+                SetColliderEnabled(false);  
                 SetAlphaTransition(true);
             }
         }
