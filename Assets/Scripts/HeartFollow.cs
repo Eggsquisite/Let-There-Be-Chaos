@@ -7,6 +7,7 @@ public class HeartFollow : MonoBehaviour
     private Rigidbody2D rb;
     private Collider2D coll;
     private SpriteRenderer sp;
+    private SpawnText st;
 
     [Header("Follow Variables")]
     [SerializeField]
@@ -17,19 +18,6 @@ public class HeartFollow : MonoBehaviour
     private bool pickupReady;
     private bool followPlayer;
     private bool returnToBaseValues;
-
-    [Header("Text Variables")]
-    [SerializeField]
-    private Transform textTransform;
-    /*    [SerializeField]
-        private float minTextDelay;
-        [SerializeField]
-        private float maxTextDelay;*/
-
-    //private float baseTextDelay;
-    //private bool textBubblesReady;
-
-    //private Coroutine textRoutine;
 
     [Header("Growth Variables")]
     [SerializeField] [Range (1, 5)]
@@ -61,12 +49,16 @@ public class HeartFollow : MonoBehaviour
         if (rb == null) rb = GetComponent<Rigidbody2D>();
         if (coll == null) coll = GetComponent<Collider2D>();
         if (sp == null) sp = GetComponent<SpriteRenderer>();
+        if (st == null) st = GetComponent<SpawnText>();
 
         SetPickupReady(true);
 
         baseColor = sp.color;
+        growthTier = Random.Range(1, 6);
         baseLightIntensity = heartLight.intensity;
         followColor = new Color(sp.color.r, sp.color.g, sp.color.b, 0f);
+
+        UpdateSize();
     }
 
     private void Update()
@@ -100,7 +92,7 @@ public class HeartFollow : MonoBehaviour
     public void OnPickup(Transform target) {
         followTarget = target;
 
-        SpawnText();
+        st.SpawnBlurb(true);
         SetPickupReady(false);
         SetFollowPlayer(true);
         SetColliderEnabled(false);
@@ -113,10 +105,6 @@ public class HeartFollow : MonoBehaviour
         SetAlphaTransition(true);
     }
 
-    private void SpawnText() {
-        Instantiate(GameManager.instance.GetLoveBlurb(), textTransform.position, Quaternion.identity, transform);
-    }
-
     private IEnumerator BeginHeartRespawn() {
         yield return new WaitForSeconds(respawnDelay);
 
@@ -126,7 +114,34 @@ public class HeartFollow : MonoBehaviour
 
     private void ReturnToBase() {
         SetPickupReady(true);
+        SetColliderEnabled(true);
         SetReturnToBaseValues(true);
+
+        UpdateSize();
+    }
+
+    private void UpdateSize() {
+        growthTier = Random.Range(1, 6);
+        switch (growthTier)
+        {
+            case 1:
+                transform.localScale = new Vector2(1f, 1f);
+                break;
+            case 2:
+                transform.localScale = new Vector2(1.5f, 1.5f);
+                break;
+            case 3:
+                transform.localScale = new Vector2(2f, 2f);
+                break;
+            case 4:
+                transform.localScale = new Vector2(2.5f, 2.5f);
+                break;
+            case 5:
+                transform.localScale = new Vector2(3f, 3f);
+                break;
+            default:
+                break;
+        }
     }
 
     private void FadeAway() {

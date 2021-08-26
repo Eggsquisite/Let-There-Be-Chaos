@@ -141,9 +141,13 @@ public class HeartPulse : MonoBehaviour
         secondPulseSize = new Vector3(firstPulseSize.x - 0.5f, firstPulseSize.y - 0.5f);
     }
 
-    private void SetPulseForce() {
-        if (pulseForce != null)
-            pulseForce.UpdateForce(forceUpgrade);
+    public void UpdatePulseForce(int index) {
+        if (pulseForce != null) { 
+            if (index > 0)
+                pulseForce.UpdateForce(forceUpgrade);
+            else if (index < 0)
+                pulseForce.UpdateForce(-forceUpgrade);
+        }
     }
 
     private void SetPulseCollider(bool flag) {

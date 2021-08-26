@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3107550392486465054}
   - component: {fileID: 3107550392486465048}
   - component: {fileID: 3107550392486465050}
+  - component: {fileID: 840292590}
   m_Layer: 7
   m_Name: Hearts
   m_TagString: Hearts
@@ -139,11 +140,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1
   transitionSpeed: 2.5
-  textTransform: {fileID: 3107550393305103562}
   growthTier: 1
   respawnDelay: 1
   heartLight: {fileID: 3107550393169636313}
   alphaTransitionDelay: 3
+--- !u!114 &840292590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3107550392486465051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d778ac02061d2d47b662335eccdd5c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnLocation: {fileID: 3107550393305103562}
 --- !u!1 &3107550393169636314
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +290,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3107550393305103563}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.65, y: 1, z: 0}
+  m_LocalPosition: {x: 0.3, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3107550392486465052}

@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float maxVelocity;
 
+    [SerializeField] private float moveSpeedUpgrade;
+
     private Vector3 movementVect;
 
     private void Start()
@@ -41,7 +43,15 @@ public class PlayerMovement : MonoBehaviour
         movementVect = movementVect.normalized * moveSpeed * 100f * Time.deltaTime;
     }
 
-    public void SetMoveSpeed(int newValue) {
+    // Called during intro animation event to prevent player moevement
+    private void SetMoveSpeed(int newValue) {
         moveSpeed = newValue;
+    }
+
+    public void UpdateMoveSpeed(int flag) {
+        if (flag < 0)
+            moveSpeed -= moveSpeedUpgrade;
+        else if (flag > 0)
+            moveSpeed += moveSpeedUpgrade;
     }
 }

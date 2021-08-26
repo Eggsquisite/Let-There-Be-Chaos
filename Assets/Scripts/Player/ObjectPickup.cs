@@ -30,6 +30,8 @@ public class ObjectPickup : MonoBehaviour
         else if (collision.gameObject.tag == "Chaos")
         {
             var tmp = collision.gameObject.GetComponent<Chaos>();
+
+            tmp.SpawnText();
             DecreaseGrowth(tmp.GetGrowthTier());
             Destroy(tmp.gameObject);
             // play a destruction sound

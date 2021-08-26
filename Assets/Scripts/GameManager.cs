@@ -7,9 +7,9 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [SerializeField]
-    private List<GameObject> loveBlurbPrefabs;
+    private GameObject loveBlurbPrefabs;
     [SerializeField]
-    private List<GameObject> chaosBlurbPrefabs;
+    private GameObject chaosBlurbPrefabs;
 
     private void Awake()
     {
@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
     }
 
     public GameObject GetLoveBlurb() {
-        return loveBlurbPrefabs[Random.Range(0, loveBlurbPrefabs.Count - 1)];
+        return loveBlurbPrefabs;
+    }
+
+    public GameObject GetChaosBlurb() {
+        return chaosBlurbPrefabs;
     }
 }
