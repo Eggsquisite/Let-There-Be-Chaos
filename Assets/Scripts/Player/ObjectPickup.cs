@@ -32,7 +32,12 @@ public class ObjectPickup : MonoBehaviour
             var tmp = collision.gameObject.GetComponent<Chaos>();
 
             tmp.SpawnText();
+
             DecreaseGrowth(tmp.GetGrowthTier());
+            if (hg.GetGrowthThreshold() <= 1) { 
+                hg.DarkenHeart();
+            }
+
             Destroy(tmp.gameObject);
             // play a destruction sound
         }

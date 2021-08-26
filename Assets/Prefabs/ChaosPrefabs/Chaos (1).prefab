@@ -139,7 +139,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &6913366683193882603
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -196,7 +196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc32964c36317864d8067d7c7e86926e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  growthTier: 1
 --- !u!114 &5055662858864145166
 MonoBehaviour:
   m_ObjectHideFlags: 0

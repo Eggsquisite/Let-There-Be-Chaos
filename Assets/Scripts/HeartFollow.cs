@@ -20,7 +20,6 @@ public class HeartFollow : MonoBehaviour
     private bool returnToBaseValues;
 
     [Header("Growth Variables")]
-    [SerializeField] [Range (1, 5)]
     private int growthTier;
 
     [Header("Respawn Variables")]
@@ -54,19 +53,21 @@ public class HeartFollow : MonoBehaviour
         SetPickupReady(true);
 
         baseColor = sp.color;
-        growthTier = Random.Range(1, 6);
         baseLightIntensity = heartLight.intensity;
         followColor = new Color(sp.color.r, sp.color.g, sp.color.b, 0f);
 
+        RandomizeGrowthTier();
         UpdateSize();
     }
 
     private void Update()
     {
+        if (alphaTransition)
+            FadeAway();
+
         if (followPlayer) {
             // Calculate Direction to follow player
             direction = followTarget.GetComponent<Rigidbody2D>().position - rb.position;
-            FadeAway();
         }
         else if (!followPlayer && returnToBaseValues) {
             // slowly return the heart to full opacity, and restore collider when that happens
@@ -75,8 +76,10 @@ public class HeartFollow : MonoBehaviour
                 lerpedColor = Color.Lerp(sp.color, baseColor, transitionSpeed / 2 * Time.deltaTime);
                 sp.color = lerpedColor;
             }
-            else
+            else {
+                SetColliderEnabled(true);
                 SetReturnToBaseValues(false);
+            }
 
             if (heartLight.intensity < baseLightIntensity)
                 heartLight.intensity = Mathf.Lerp(heartLight.intensity, baseLightIntensity, transitionSpeed * Time.deltaTime);
@@ -87,6 +90,27 @@ public class HeartFollow : MonoBehaviour
     {
         if (followPlayer)
             rb.MovePosition(rb.position + direction * moveSpeed * Time.fixedDeltaTime);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Chaos")
+        {
+            var tmp = collision.gameObject.GetComponent<Chaos>();
+            tmp.SetGrowthTier(tmp.GetGrowthTier() - 1);
+            Vector3 tmpDir = (collision.transform.position - transform.position).normalized;
+            tmp.GetComponent<Rigidbody2D>().AddForce(tmpDir * 15f * growthTier);
+
+            if (growthTier > 1) {
+                growthTier -= 1;
+                UpdateSize();
+            } else
+            {
+                SetPickupReady(false);
+                SetColliderEnabled(false);
+                SetAlphaTransition(true);
+            }
+        }
     }
 
     public void OnPickup(Transform target) {
@@ -116,12 +140,15 @@ public class HeartFollow : MonoBehaviour
         SetPickupReady(true);
         SetColliderEnabled(true);
         SetReturnToBaseValues(true);
-
+        RandomizeGrowthTier();
         UpdateSize();
     }
 
-    private void UpdateSize() {
+    private void RandomizeGrowthTier() {
         growthTier = Random.Range(1, 6);
+    }
+
+    private void UpdateSize() {
         switch (growthTier)
         {
             case 1:
@@ -146,12 +173,12 @@ public class HeartFollow : MonoBehaviour
 
     private void FadeAway() {
         // slowly make the heart fully transparent
-        if (sp.color != followColor && alphaTransition)
+        if (sp.color != followColor)
         {
             lerpedColor = Color.Lerp(sp.color, followColor, transitionSpeed * Time.deltaTime);
             sp.color = lerpedColor;
         }
-        else if (sp.color == followColor && alphaTransition)
+        else if (sp.color == followColor)
         {
             SetFollowPlayer(false);
             SetAlphaTransition(false);

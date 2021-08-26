@@ -26,6 +26,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField]
     private float objectYSpread;
 
+    private bool canSpawn;
     private Vector3 randPosition;
 
     private void Awake()
@@ -44,6 +45,18 @@ public class ObjectSpawner : MonoBehaviour
 
         for (int i = 0; i < numberOfChaosObjectsToSpawn; i++) {
             SpreadObjects(false, 0);
+        }
+
+        canSpawn = true;
+        StartCoroutine(SpawnChaos());
+    }
+
+    private IEnumerator SpawnChaos() { 
+        while (canSpawn)
+        {
+            yield return new WaitForSeconds(5f);
+            randPosition = new Vector3(Random.Range(-objectXSpread, objectXSpread), Random.Range(-objectYSpread, objectYSpread));
+            Instantiate(chaosObjects[Random.Range(0, chaosObjects.Count)], randPosition, Quaternion.identity, chaosParent);
         }
     }
 

@@ -6,6 +6,20 @@ public class HeartGrowth : MonoBehaviour
 {
     private HeartPulse hp;
     private PlayerMovement pm;
+    [SerializeField]
+    private SpriteRenderer sp;
+
+    [Header("Heart Darken Variables")]
+    [SerializeField]
+    private float transitionSpeed;
+
+    private bool firstDarken;
+
+    private Color baseColor;
+    private Color transitionColor;
+
+    [SerializeField]
+    private UnityEngine.Experimental.Rendering.Universal.Light2D heartLight;
 
     [Header("Growth Variables")]
     [SerializeField]
@@ -49,6 +63,8 @@ public class HeartGrowth : MonoBehaviour
 
         baseGrowth = 1f;
         growthUpdate = 1f;
+
+        baseColor = transitionColor = sp.color;
     }
 
     // Update is called once per frame
@@ -65,9 +81,18 @@ public class HeartGrowth : MonoBehaviour
             baseGrowth = Mathf.Lerp(baseGrowth, growthUpdate, growthSpeed * Time.deltaTime);
         }
 
+        if (baseColor != transitionColor) {
+            sp.color = baseColor;
+            baseColor = Color.Lerp(baseColor, transitionColor, transitionSpeed * Time.deltaTime);
+        }
+
+        CalculateThreshold();
+    }
+
+    private void CalculateThreshold() { 
         if (baseGrowth > minGrowthSize && baseGrowth <= thresholdOne && thresholdIndex != 1) {
             if (thresholdIndex > 1) {
-                UpdateThreshold(-1);
+                UpdateThreshold(-1, 1);
             }
 
             thresholdIndex = 1;
@@ -75,41 +100,52 @@ public class HeartGrowth : MonoBehaviour
         else if (baseGrowth > thresholdOne && baseGrowth <= thresholdTwo && thresholdIndex != 2)
         {
             if (thresholdIndex > 2) {
-                UpdateThreshold(-1);
+                UpdateThreshold(-1, 2);
             }
             else {
-                UpdateThreshold(1);
+                UpdateThreshold(1, 2);
             }
 
             thresholdIndex = 2;
         }
-        else if (baseGrowth > thresholdOne && baseGrowth <= thresholdThree && thresholdIndex != 3)
+        else if (baseGrowth > thresholdTwo && baseGrowth <= thresholdThree && thresholdIndex != 3)
         {
             if (thresholdIndex > 3) {
-                UpdateThreshold(-1);
+                UpdateThreshold(-1, 3);
             }
             else {
-                UpdateThreshold(1);
+                UpdateThreshold(1, 3);
             }
 
             thresholdIndex = 3;
         }
-        else if (baseGrowth > thresholdOne && baseGrowth <= thresholdFour && thresholdIndex != 4)
+        else if (baseGrowth > thresholdThree && baseGrowth <= thresholdFour && thresholdIndex != 4)
         {
             if (thresholdIndex > 4) {
-                UpdateThreshold(-1);
+                UpdateThreshold(-1, 4);
+                heartLight.pointLightOuterRadius -= growthTierFour;
             }
             else {
-                UpdateThreshold(1);
+                UpdateThreshold(1, 5);
             }
 
             thresholdIndex = 4;
         }
-        else if (baseGrowth > thresholdOne && baseGrowth <= thresholdFive && thresholdIndex != 5)
+        else if (baseGrowth > thresholdFour && baseGrowth <= thresholdFive && thresholdIndex != 5)
         {
-            UpdateThreshold(1);
+            UpdateThreshold(1, 5);
 
             thresholdIndex = 5;
+        }
+    }
+
+    public void DarkenHeart() {
+        if (!firstDarken) { 
+            transitionColor = new Color(transitionColor.r - 0.8f, transitionColor.g - 0.8f, transitionColor.b - 0.8f);
+            firstDarken = true;
+        } else
+        {
+            transitionColor = new Color(transitionColor.r - 0.05f, transitionColor.g - 0.05f, transitionColor.b - 0.05f);
         }
     }
 
@@ -130,15 +166,9 @@ public class HeartGrowth : MonoBehaviour
             case 5:
                 growthUpdate += growthTierFive;
                 break;
-
             default:
                 break;
         }
-
-/*        if (growthUpdate + newValue <= maxGrowthValue)
-            growthUpdate += newValue;
-        else if (growthUpdate + newValue > maxGrowthValue)
-            growthUpdate = maxGrowthValue;*/
     }
 
     public void DecreaseGrowth(int growthTier) {
@@ -162,15 +192,39 @@ public class HeartGrowth : MonoBehaviour
             default:
                 break;
         }
-
-        /*        if (growthUpdate - newValue >= minGrowthValue)
-                    growthUpdate -= newValue;
-                else if (growthUpdate - newValue < minGrowthValue)
-                    growthUpdate = minGrowthValue;*/
     }
 
-    private void UpdateThreshold(int flag) {
+    private void UpdateThreshold(int flag, int growthIndex) {
         pm.UpdateMoveSpeed(flag);
         hp.UpdatePulseForce(flag);
+
+        if (flag < 0) {
+            if (growthIndex == 1)
+                heartLight.pointLightOuterRadius -= growthTierOne * 2;
+            else if (growthIndex == 2)
+                heartLight.pointLightOuterRadius -= growthTierTwo * 2;
+            else if (growthIndex == 3)
+                heartLight.pointLightOuterRadius -= growthTierThree * 2;
+            else if (growthIndex == 4)
+                heartLight.pointLightOuterRadius -= growthTierFour * 2;
+            else if (growthIndex == 5)
+                heartLight.pointLightOuterRadius -= growthTierFive * 2;
+        } 
+        else if (flag > 0) {
+            if (growthIndex == 1)
+                heartLight.pointLightOuterRadius += growthTierOne * 2;
+            else if (growthIndex == 2)
+                heartLight.pointLightOuterRadius += growthTierTwo * 2;
+            else if (growthIndex == 3)
+                heartLight.pointLightOuterRadius += growthTierThree * 2;
+            else if (growthIndex == 4)
+                heartLight.pointLightOuterRadius += growthTierFour * 2;
+            else if (growthIndex == 5)
+                heartLight.pointLightOuterRadius += growthTierFive * 2;
+        }
+    }
+
+    public int GetGrowthThreshold() {
+        return thresholdIndex;
     }
 }
