@@ -6,6 +6,7 @@ public class HeartGrowth : MonoBehaviour
 {
     private HeartPulse hp;
     private PlayerMovement pm;
+    private PlayerMusic music;
     [SerializeField]
     private SpriteRenderer sp;
 
@@ -61,6 +62,7 @@ public class HeartGrowth : MonoBehaviour
     {
         if (hp == null) hp = GetComponent<HeartPulse>();
         if (pm == null) pm = GetComponent<PlayerMovement>();
+        if (music == null) music = GetComponent<PlayerMusic>();
 
         baseGrowth = 1f;
         growthUpdate = 1f;
@@ -131,7 +133,7 @@ public class HeartGrowth : MonoBehaviour
                 heartLight.pointLightOuterRadius -= growthTierFour;
             }
             else {
-                UpdateThreshold(1, 5);
+                UpdateThreshold(1, 4);
             }
 
             thresholdIndex = 4;
@@ -166,6 +168,7 @@ public class HeartGrowth : MonoBehaviour
         isDead = true;
         pm.SetMoveSpeed(0);
         hp.SetIsDead(true);
+        music.BeginNewMusic(thresholdIndex, 7);
         Debug.Log("Player dead");
     }
 
@@ -217,6 +220,7 @@ public class HeartGrowth : MonoBehaviour
     private void UpdateThreshold(int flag, int growthIndex) {
         pm.UpdateMoveSpeed(flag);
         hp.UpdatePulseForce(flag);
+        music.BeginNewMusic(thresholdIndex, growthIndex);
 
         if (flag < 0) {
             if (growthIndex == 1)
