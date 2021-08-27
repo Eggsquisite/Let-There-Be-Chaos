@@ -19,6 +19,8 @@ public class ObjectSpawner : MonoBehaviour
     private Transform heartParent;
     [SerializeField]
     private List<GameObject> heartObjects;
+    [SerializeField]
+    private int numberOfHeartsToSpawn;
 
     [Header("Spread variables")]
     [SerializeField]
@@ -35,11 +37,9 @@ public class ObjectSpawner : MonoBehaviour
             instance = this;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Spawn heart objects
-        for (int i = 0; i < heartObjects.Count; i++) {
+    public void SpawnObjects() { 
+            // Spawn heart objects
+        for (int i = 0; i < numberOfHeartsToSpawn; i++) {
             SpreadObjects(true, i);
         }
 
@@ -68,7 +68,7 @@ public class ObjectSpawner : MonoBehaviour
         randPosition = new Vector3(Random.Range(-objectXSpread, objectXSpread), Random.Range(-objectYSpread, objectYSpread));
         if (flag)
         {
-            Instantiate(heartObjects[index], randPosition, Quaternion.identity, heartParent);
+            Instantiate(heartObjects[Random.Range(0, heartObjects.Count)], randPosition, Quaternion.identity, heartParent);
         } else
         {
             Instantiate(chaosObjects[Random.Range(0, chaosObjects.Count)], randPosition, Quaternion.identity, chaosParent);

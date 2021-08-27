@@ -43,8 +43,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Pulse
+    uniqueID: 1452707421
+    locked: 0
   - name: Objects
     uniqueID: 2939487009
+    locked: 0
+  - name: Player
+    uniqueID: 3136602885
     locked: 0
   - name: UI
     uniqueID: 1732343543

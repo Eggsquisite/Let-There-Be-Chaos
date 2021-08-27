@@ -57,6 +57,7 @@ public class HeartPulse : MonoBehaviour
         if (heartLight != null)
             baseLightIntensity = heartLight.intensity;
 
+        SetCanPulse(0);
         secondPulseSize = new Vector3(firstPulseSize.x - 0.5f, firstPulseSize.y - 0.5f);
         basePulseSize = new Vector3(pulseGameobject.transform.localScale.x, pulseGameobject.transform.localScale.y);
     }
@@ -68,14 +69,14 @@ public class HeartPulse : MonoBehaviour
             smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, Vector2.zero, 0.75f * Time.deltaTime);
             pulseGameobject.transform.localScale = smoothedPulse;
 
-            heartLight.intensity = Mathf.Lerp(heartLight.intensity, 0f, 0.5f * Time.deltaTime);
+            UpdateLight(heartLight.intensity, 0f, 0.5f);
         } 
         else if (canPulse && introPulse) {
             SetPulseCollider(true);
             smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, introPulseSize, pulseSpeed * Time.deltaTime);
             pulseGameobject.transform.localScale = smoothedPulse;
 
-            heartLight.intensity = Mathf.Lerp(heartLight.intensity, introLightIntensity, pulseSpeed * Time.deltaTime);
+            UpdateLight(heartLight.intensity, introLightIntensity, pulseSpeed);
             if (pulseGameobject.transform.localScale.x >= (introPulseSize.x - 0.1f))
                 introPulse = false;
         }
@@ -87,7 +88,7 @@ public class HeartPulse : MonoBehaviour
                     smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, firstPulseSize, pulseSpeed * Time.deltaTime);
                     pulseGameobject.transform.localScale = smoothedPulse;
 
-                    heartLight.intensity = Mathf.Lerp(heartLight.intensity, maxLightIntensity, pulseSpeed * Time.deltaTime);
+                    UpdateLight(heartLight.intensity, maxLightIntensity, pulseSpeed);
                     if (pulseGameobject.transform.localScale.x >= (firstPulseSize.x - 0.1f))
                         IncreasePulseIndex();
                     break;
@@ -109,7 +110,7 @@ public class HeartPulse : MonoBehaviour
                     smoothedPulse = Vector3.Lerp(pulseGameobject.transform.localScale, basePulseSize, pulseSpeed * Time.deltaTime);
                     pulseGameobject.transform.localScale = smoothedPulse;
 
-                    heartLight.intensity = Mathf.Lerp(heartLight.intensity, baseLightIntensity, pulseSpeed * Time.deltaTime);
+                    UpdateLight(heartLight.intensity, baseLightIntensity, pulseSpeed);
                     // set pulse back to original size
                     if (pulseGameobject.transform.localScale.x <= basePulseSize.x + 0.1f)
                         IncreasePulseIndex();
@@ -172,6 +173,11 @@ public class HeartPulse : MonoBehaviour
 
     public void SetIsDead(bool flag) {
         isDead = flag;
+    }
+
+    // Changing light intensity to be affected by heart growth, NOT pulse
+    private void UpdateLight(float a, float b, float t) {
+        //heartLight.intensity = Mathf.Lerp(a, b, t * Time.deltaTime);
     }
 
     /// <summary>

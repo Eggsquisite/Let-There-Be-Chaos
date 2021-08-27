@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    public static CameraFollow instance;
+
+    private Camera cam;
+    private float baseCamSize;
+    private float targetSize;
+
     [SerializeField]
     private Transform playerTarget;
     [SerializeField]
@@ -25,10 +31,21 @@ public class CameraFollow : MonoBehaviour
 
     private Vector3 velocity = Vector3.zero;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        if (instance == null)
+            instance = this;
+
+        cam = GetComponent<Camera>();
+        baseCamSize = targetSize = cam.orthographicSize;
+    }
+
+    private void Update()
+    {
+        if (baseCamSize != targetSize) {
+            cam.orthographicSize = baseCamSize;
+            baseCamSize = Mathf.Lerp(baseCamSize, targetSize, 0.5f * Time.deltaTime);
+        }
     }
 
     // Update is called once per frame
@@ -44,5 +61,9 @@ public class CameraFollow : MonoBehaviour
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, speed * Time.fixedDeltaTime);
             transform.position = Vector3.SmoothDamp(transform.position, smoothedPosition, ref velocity, smoothSpeed);
         }
+    }
+
+    public void UpdateCameraSize(float valueToAdd) {
+        targetSize += valueToAdd;
     }
 }

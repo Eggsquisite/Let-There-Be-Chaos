@@ -10,6 +10,8 @@ public class PlayerMusic : MonoBehaviour
     [SerializeField]
     private List<AudioSource> audioSources;
     [SerializeField]
+    private AudioSource heartBeat;
+    [SerializeField]
     private float transitionOutDuration;
     [SerializeField]
     private float fadeOutVolume;
@@ -87,5 +89,13 @@ public class PlayerMusic : MonoBehaviour
                 break;
             default: break;
         }
+    }
+
+    public void PlayHeartbeat() {
+        heartBeat.Play();
+    }
+
+    public void StartMusic() {
+        audioSources[0].Play();
     }
 }

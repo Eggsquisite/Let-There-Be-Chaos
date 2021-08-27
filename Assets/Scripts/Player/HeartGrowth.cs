@@ -7,6 +7,7 @@ public class HeartGrowth : MonoBehaviour
     private HeartPulse hp;
     private PlayerMovement pm;
     private PlayerMusic music;
+    private Collider2D coll;
     [SerializeField]
     private SpriteRenderer sp;
 
@@ -20,8 +21,22 @@ public class HeartGrowth : MonoBehaviour
     private Color baseColor;
     private Color transitionColor;
 
+    [Header("Light Variables")]
     [SerializeField]
     private UnityEngine.Experimental.Rendering.Universal.Light2D heartLight;
+    [SerializeField]
+    private UnityEngine.Experimental.Rendering.Universal.Light2D baseLight;
+
+    [SerializeField]
+    private float lightTierOne;
+    [SerializeField]
+    private float lightTierTwo;
+    [SerializeField]
+    private float lightTierThree;
+    [SerializeField]
+    private float lightTierFour;
+    [SerializeField]
+    private float lightTierFive;
 
     [Header("Growth Variables")]
     [SerializeField]
@@ -63,6 +78,7 @@ public class HeartGrowth : MonoBehaviour
         if (hp == null) hp = GetComponent<HeartPulse>();
         if (pm == null) pm = GetComponent<PlayerMovement>();
         if (music == null) music = GetComponent<PlayerMusic>();
+        if (coll == null) coll = GetComponent<Collider2D>();
 
         baseGrowth = 1f;
         growthUpdate = 1f;
@@ -89,11 +105,13 @@ public class HeartGrowth : MonoBehaviour
             
             if (!isDead)
                 baseColor = Color.Lerp(baseColor, transitionColor, transitionSpeed * Time.deltaTime);
-            else 
-                baseColor = Color.Lerp(baseColor, transitionColor, 0.5f * Time.deltaTime);
+            else { 
+                baseColor = Color.Lerp(baseColor, transitionColor, 1f * Time.deltaTime);
+            }
         } 
 
         CalculateThreshold();
+        CalculateLightIntensity();
     }
 
     private void CalculateThreshold() { 
@@ -141,8 +159,35 @@ public class HeartGrowth : MonoBehaviour
         else if (baseGrowth > thresholdFour && baseGrowth <= thresholdFive && thresholdIndex != 5)
         {
             UpdateThreshold(1, 5);
-
             thresholdIndex = 5;
+        }
+    }
+
+    private void CalculateLightIntensity() {
+        if (isDead)
+        {
+            UpdateLight(heartLight.intensity, 0f, transitionSpeed);
+            baseLight.intensity = Mathf.Lerp(baseLight.intensity, 0f, transitionSpeed * Time.deltaTime);
+        } else
+        { 
+            switch (thresholdIndex) {
+                case 1:
+                    UpdateLight(heartLight.intensity, lightTierOne, transitionSpeed);
+                    break;
+                case 2:
+                    UpdateLight(heartLight.intensity, lightTierTwo, transitionSpeed);
+                    break;
+                case 3:
+                    UpdateLight(heartLight.intensity, lightTierThree, transitionSpeed);
+                    break;
+                case 4:
+                    UpdateLight(heartLight.intensity, lightTierFour, transitionSpeed);
+                    break;
+                case 5:
+                    UpdateLight(heartLight.intensity, lightTierFive, transitionSpeed);
+                    break;
+                default: break;
+            }
         }
     }
 
@@ -168,8 +213,19 @@ public class HeartGrowth : MonoBehaviour
         isDead = true;
         pm.SetMoveSpeed(0);
         hp.SetIsDead(true);
+        coll.enabled = false;
+        GameManager.instance.PlayerIsDead();
         music.BeginNewMusic(thresholdIndex, 7);
         Debug.Log("Player dead");
+    }
+
+    public void SetColliderEnabled()
+    {
+        coll.enabled = true;
+    }
+
+    private void UpdateLight(float a, float b, float t) {
+        heartLight.intensity = Mathf.Lerp(a, b, t * Time.deltaTime);
     }
 
     public void IncreaseGrowth(int growthTier) {
@@ -223,28 +279,68 @@ public class HeartGrowth : MonoBehaviour
         music.BeginNewMusic(thresholdIndex, growthIndex);
 
         if (flag < 0) {
-            if (growthIndex == 1)
-                heartLight.pointLightOuterRadius -= growthTierOne * 2;
-            else if (growthIndex == 2)
-                heartLight.pointLightOuterRadius -= growthTierTwo * 2;
-            else if (growthIndex == 3)
-                heartLight.pointLightOuterRadius -= growthTierThree * 2;
-            else if (growthIndex == 4)
-                heartLight.pointLightOuterRadius -= growthTierFour * 2;
-            else if (growthIndex == 5)
-                heartLight.pointLightOuterRadius -= growthTierFive * 2;
+            if (growthIndex == 1) {
+                CameraFollow.instance.UpdateCameraSize(-1);
+
+                baseLight.pointLightOuterRadius -= lightTierOne;
+                baseLight.pointLightInnerRadius -= lightTierOne;
+            }
+            else if (growthIndex == 2) {
+                CameraFollow.instance.UpdateCameraSize(-1);
+
+                baseLight.pointLightOuterRadius -= lightTierTwo;
+                baseLight.pointLightInnerRadius -= lightTierTwo;
+            }
+            else if (growthIndex == 3) {
+                CameraFollow.instance.UpdateCameraSize(-1);
+
+                baseLight.pointLightOuterRadius -= lightTierThree;
+                baseLight.pointLightInnerRadius -= lightTierThree;
+            }
+            else if (growthIndex == 4) {
+                CameraFollow.instance.UpdateCameraSize(-1);
+
+                baseLight.pointLightOuterRadius -= lightTierFour;
+                baseLight.pointLightInnerRadius -= lightTierFour;
+            }
+            else if (growthIndex == 5) {
+                CameraFollow.instance.UpdateCameraSize(-2);
+
+                baseLight.pointLightOuterRadius -= lightTierFive;
+                baseLight.pointLightInnerRadius -= lightTierFive;
+            }
         } 
         else if (flag > 0) {
-            if (growthIndex == 1)
-                heartLight.pointLightOuterRadius += growthTierOne * 2;
-            else if (growthIndex == 2)
-                heartLight.pointLightOuterRadius += growthTierTwo * 2;
-            else if (growthIndex == 3)
-                heartLight.pointLightOuterRadius += growthTierThree * 2;
-            else if (growthIndex == 4)
-                heartLight.pointLightOuterRadius += growthTierFour * 2;
-            else if (growthIndex == 5)
-                heartLight.pointLightOuterRadius += growthTierFive * 2;
+            if (growthIndex == 1) {
+                CameraFollow.instance.UpdateCameraSize(1);
+
+                baseLight.pointLightOuterRadius += lightTierOne;
+                baseLight.pointLightInnerRadius += lightTierOne;
+            }
+            else if (growthIndex == 2) {
+                CameraFollow.instance.UpdateCameraSize(1);
+
+                baseLight.pointLightOuterRadius += lightTierTwo;
+                baseLight.pointLightInnerRadius += lightTierTwo;
+            }
+            else if (growthIndex == 3) {
+                CameraFollow.instance.UpdateCameraSize(1);
+
+                baseLight.pointLightOuterRadius += lightTierThree;
+                baseLight.pointLightInnerRadius += lightTierThree;
+            }
+            else if (growthIndex == 4) {
+                CameraFollow.instance.UpdateCameraSize(1);
+
+                baseLight.pointLightOuterRadius += lightTierFour;
+                baseLight.pointLightInnerRadius += lightTierFour;
+            }
+            else if (growthIndex == 5) {
+                CameraFollow.instance.UpdateCameraSize(2);
+
+                baseLight.pointLightOuterRadius += lightTierFive;
+                baseLight.pointLightInnerRadius += lightTierFive;
+            }
         }
     }
 

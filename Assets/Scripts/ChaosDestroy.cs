@@ -6,7 +6,7 @@ public class ChaosDestroy : MonoBehaviour
 {
     private void Start()
     {
-        Invoke("DestroySelf", 1f);
+        Invoke("DestroySelf", 5f);
     }
 
     private void DestroySelf() {
